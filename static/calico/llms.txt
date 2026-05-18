@@ -364,4 +364,4 @@
 
 ## Optional
 
-- [Calico Open Source 3.32 release notes](https://docs.tigera.io/calico/latest/release-notes/): Release notes for Calico Open Source
+- [Calico Open Source 3.32 release notes](https://docs.tigera.io/calico/latest/release-notes/): Release notes for the current Calico Open Source release — new features, enhancements, technology previews, deprecations, bug fixes, and known issues.

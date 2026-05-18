@@ -15971,7 +15971,7 @@ There are two sections to the install: adding Calico to OpenStack control nodes,
 
 - Ensure that you meet the [requirements](https://docs.tigera.io/calico/latest/getting-started/openstack/requirements).
 - Confirm that you have SSH access to and root privileges on one or more Ubuntu hosts (your OpenStack compute or control nodes).
-- [Install OpenStack with Neutron and ML2 networking](http://docs.openstack.org) on the Ubuntu hosts.
+- [Install OpenStack](http://docs.openstack.org) on the Ubuntu hosts.
 
 ## Common steps[​](#common-steps)
 
@@ -16212,7 +16212,7 @@ There are two sections to the install: adding Calico to OpenStack control nodes,
 - Ensure that you meet the [requirements](https://docs.tigera.io/calico/latest/getting-started/openstack/requirements).
 - Confirm that you have SSH access to and root privileges on one or more Red Hat Enterprise Linux (RHEL) hosts.
 - Make sure you have working DNS between the RHEL hosts (use `/etc/hosts` if you don't have DNS on your network).
-- [Install OpenStack with Neutron and ML2 networking](http://docs.openstack.org) on the RHEL hosts.
+- [Install OpenStack](http://docs.openstack.org) on the RHEL hosts.
 
 ## Common steps[​](#common-steps)
 
@@ -23408,17 +23408,7 @@ In `/etc/neutron/neutron.conf` you need the following settings to configure the 
 | ------------ | ------ | -------------------------- |
 | core\_plugin | calico | Use the Calico core plugin |
 
-Calico can operate either as a core plugin or as an ML2 mechanism driver. The function is the same both ways, except that floating IPs are only supported when operating as a core plugin; hence the recommended setting here.
-
-However, if you don't need floating IPs and have other reasons for using ML2, you can, instead, set
-
-| Setting      | Value                                | Meaning        |
-| ------------ | ------------------------------------ | -------------- |
-| core\_plugin | neutron.plugins.ml2.plugin.ML2Plugin | Use ML2 plugin |
-
-and then the further ML2-specific configuration as covered below.
-
-The following options in the `[calico]` section of `/etc/neutron/neutron.conf` govern how the Calico plugin/driver and DHCP agent connect to the Calico etcd datastore. You should set `etcd_host` to the IP of your etcd server, and `etcd_port` if that server is using a non-standard port. If the etcd server is TLS-secured, also set:
+The following options in the `[calico]` section of `/etc/neutron/neutron.conf` govern how the Calico plugin and DHCP agent connect to the Calico etcd datastore. You should set `etcd_host` to the IP of your etcd server, and `etcd_port` if that server is using a non-standard port. If the etcd server is TLS-secured, also set:
 
 - `etcd_cert_file` to a client certificate, which must be signed by a Certificate Authority that the server trusts
 
@@ -23442,19 +23432,9 @@ In a [multi-region deployment](https://docs.tigera.io/calico/latest/networking/o
 
 When specified, the value of `openstack_region` must be a string of lower case alphanumeric characters or '-', starting and ending with an alphanumeric character, and must match the value of [`OpenStackRegion`](https://docs.tigera.io/calico/latest/reference/felix/configuration#openstack-specific-configuration) configured for the Felixes in the same region.
 
-## ML2 (.../ml2\_conf.ini)[​](#ml2-ml2_confini)
-
-In `/etc/neutron/plugins/ml2/ml2_conf.ini` you need the following settings to configure the ML2 plugin.
-
-| Setting                | Value       | Meaning                           |
-| ---------------------- | ----------- | --------------------------------- |
-| mechanism\_drivers     | calico      | Use Calico                        |
-| type\_drivers          | local, flat | Allow 'local' and 'flat' networks |
-| tenant\_network\_types | local, flat | Allow 'local' and 'flat' networks |
-
 ### Detailed semantics
 
-A Calico network is a Neutron network (either provider or tenant) whose connectivity is implemented, on every compute host with instances attached to that network, by the `calico` plugin or ML2 mechanism driver. There can be just one Calico network, or any number of them. This page describes the connectivity that Calico provides between instances attached to the same network, and between instances attached to different Calico networks, and between instances and the Internet; and explains how and why this connectivity is in some details different from traditional Neutron API semantics.
+A Calico network is a Neutron network (either provider or tenant) whose connectivity is implemented, on every compute host with instances attached to that network, by the `calico` plugin. There can be just one Calico network, or any number of them. This page describes the connectivity that Calico provides between instances attached to the same network, and between instances attached to different Calico networks, and between instances and the Internet; and explains how and why this connectivity is in some details different from traditional Neutron API semantics.
 
 ## Connectivity between instances on the same network[​](#connectivity-between-instances-on-the-same-network)
 
@@ -23506,9 +23486,7 @@ Subject to those restrictions and understandings, we believe that networking-cal
 
 ### Floating IPs
 
-networking-calico includes beta support for floating IPs. Currently this requires running Calico as a Neutron core plugin (i.e. `core_plugin = calico`) instead of as an ML2 mechanism driver.
-
-> **SECONDARY:** We would like it to work as an ML2 mechanism driver too—patches and/or advice welcome!
+networking-calico includes support for floating IPs.
 
 To set up a floating IP, you need the same pattern of Neutron data model objects as you do for Neutron in general, which means:
 
@@ -24878,7 +24856,7 @@ The timestamps on these transitions let you measure how long each phase takes. F
 
 ### Kuryr
 
-networking-calico works with Kuryr; this means using Neutron, with the Calico ML2 driver, to provide networking for container workloads.
+networking-calico works with Kuryr; this means using Neutron, with the Calico core plugin, to provide networking for container workloads.
 
 You can use DevStack to install a single node Calico/Kuryr system, with a `local.conf` file like this:
 
@@ -24992,7 +24970,7 @@ All the attributes of security groups remain unchanged in Calico.
 
 ## Floating IPs[​](#floating-ips)
 
-Floating IPs are supported at beta level. For more information, see [Floating IPs](https://docs.tigera.io/calico/latest/networking/openstack/floating-ips).
+Floating IPs are supported. For more information, see [Floating IPs](https://docs.tigera.io/calico/latest/networking/openstack/floating-ips).
 
 ## Neutron Routers[​](#neutron-routers)
 
@@ -33268,7 +33246,7 @@ If you are using the etcd datastore, we recommend enabling mutual TLS authentica
   - [Kubernetes controllers](https://docs.tigera.io/calico/latest/reference/kube-controllers/configuration#configuring-datastore-access) (Kubernetes and OpenShift only)
   - [Felix](https://docs.tigera.io/calico/latest/reference/felix/configuration#etcd-datastore-configuration)
   - [Typha](https://docs.tigera.io/calico/latest/reference/typha/configuration#etcd-datastore-configuration) (often deployed in larger Kubernetes deployments)
-  - [Neutron plugin or ML2 driver](https://docs.tigera.io/calico/latest/networking/openstack/configuration#neutron-server-etcneutronneutronconf) (OpenStack only)
+  - [Neutron plugin](https://docs.tigera.io/calico/latest/networking/openstack/configuration#neutron-server-etcneutronneutronconf) (OpenStack only)
   - [DHCP agent](https://docs.tigera.io/calico/latest/networking/openstack/configuration#neutron-server-etcneutronneutronconf) (OpenStack only)
 
 <!-- /tabs -->
@@ -60429,7 +60407,7 @@ If Felix is restarted, it learns current local state by interrogating the kernel
 
 The bulk of global state is mastered in whatever component hosts the plugin.
 
-- In the case of OpenStack, this means a Neutron database. Our OpenStack plugin (more strictly a Neutron ML2 driver) queries the Neutron database to find out state about the entire deployment. That state is then reflected to `etcd` and so to Felix.
+- In the case of OpenStack, this means a Neutron database. Our OpenStack plugin queries the Neutron database to find out state about the entire deployment. That state is then reflected to `etcd` and so to Felix.
 - In certain cases, `etcd` itself contains the master copy of the data. This is because some Docker deployments have an `etcd` cluster that has the required resiliency characteristics, used to store all system configuration and so `etcd` is configured so as to be a suitable store for critical data.
 - In other orchestration systems, it may be stored in distributed databases, either owned directly by the plugin or by the orchestrator itself.
 
