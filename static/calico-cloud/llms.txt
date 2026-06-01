@@ -341,4 +341,4 @@
 
 ## Optional
 
-- [Calico Cloud release notes](https://docs.tigera.io/calico-cloud/release-notes/): What's new, and why features provide value for upgrading.
+- [Calico Cloud release notes](https://docs.tigera.io/calico-cloud/release-notes/): Find what changed in each release of Calico Cloud, including new features, web console updates, enhancements, and fixes across dated releases.
