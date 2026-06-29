@@ -442,4 +442,4 @@
 
 ## Optional
 
-- [Calico Enterprise 3.22 release notes](https://docs.tigera.io/calico-enterprise/latest/release-notes/): What's new, and why features provide value for upgrading.
+- [Calico Enterprise 3.22 release notes](https://docs.tigera.io/calico-enterprise/latest/release-notes/): Release notes for the current Calico Enterprise release — new features, enhancements, technology previews, deprecations, and bug fixes.
